@@ -212,12 +212,11 @@ def train():
     batch, i = 0, 0
     print(len(train_data), len(train_iter))
     while batch < len(train_iter):
+        model.train()
         (data, targets), b_size = next(iter(train_iter))
-
         lr2 = optimizer.param_groups[0]['lr']
         optimizer.param_groups[0]['lr'] = lr2 * len(data) / args.bptt
 
-        model.train()
 
         # Starting each batch, we detach the hidden state from how it was previously produced.
         # If we didn't, the model would try backpropagating all the way to start of the dataset.
@@ -242,7 +241,7 @@ def train():
         total_len += len(data)
         optimizer.param_groups[0]['lr'] = lr2
         if batch % args.log_interval == 0 and batch > 0:
-            cur_loss = total_loss.item() / args.log_interval*train_batch_size
+            cur_loss = total_loss.item() / args.log_interval
             elapsed = time.time() - start_time
             print('| epoch {:3d} | {:5d}/{:5d} batches | lr {:05.5f} | ms/batch {:5.2f} | '
                     'loss {:5.2f} | ppl {:8.2f} | bpc {:8.3f}'.format(
