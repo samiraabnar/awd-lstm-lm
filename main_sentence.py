@@ -113,13 +113,13 @@ trg = torchtext.data.Field()
 
 # continuing from above
 train_data = torchtext.datasets.TranslationDataset(
-     path='/content/train', exts=('.src', '.tgt'),
+     path=args.data+'/train', exts=('.src', '.tgt'),
      fields=(src, trg))
 valid_data = torchtext.datasets.TranslationDataset(
-     path='/content/valid', exts=('.src', '.tgt'),
+     path=args.data+'/valid', exts=('.src', '.tgt'),
      fields=(src, trg))
 test_data = torchtext.datasets.TranslationDataset(
-     path='/content/test', exts=('.src', '.tgt'),
+     path=args.data+'/test', exts=('.src', '.tgt'),
      fields=(src, trg))
 
 src.build_vocab(train_data, max_size=ntokens)
