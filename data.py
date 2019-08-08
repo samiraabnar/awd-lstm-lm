@@ -42,12 +42,13 @@ class Corpus(object):
             for line in f:
                 line = line.replace("\n", "")
                 print(line)
-                words = line.split() + ['<eos>']
-                if len(words) > Max_Length:
-                    Max_Length = len(words)
-                tokens += len(words)
-                for word in words:
-                    self.dictionary.add_word(word)
+                if line is not None:
+                    words = line.split() + ['<eos>']
+                    if len(words) > Max_Length:
+                        Max_Length = len(words)
+                    tokens += len(words)
+                    for word in words:
+                        self.dictionary.add_word(word)
 
         # Tokenize file content
         if not keep_sentence_boundaries:
@@ -57,10 +58,11 @@ class Corpus(object):
                 for line in f:
                     line = line.replace("\n", "")
                     print(line)
-                    words = line.split() + ['<eos>']
-                    for word in words:
-                        ids[token] = self.dictionary.word2idx[word]
-                        token += 1
+                    if line is not None:
+                        words = line.split() + ['<eos>']
+                        for word in words:
+                            ids[token] = self.dictionary.word2idx[word]
+                            token += 1
         else:
             encoded_sentences = []
             with open(path, 'r') as f:
@@ -68,16 +70,17 @@ class Corpus(object):
                     encsentence = []
                     line = line.replace("\n", "")
                     print(line)
-                    words = line.split() + ['<eos>']
-                    for word in words:
-                        encsentence.append(self.dictionary.word2idx[word])
+                    if line is not None:
+                        words = line.split() + ['<eos>']
+                        for word in words:
+                            encsentence.append(self.dictionary.word2idx[word])
 
-                    if (Max_Length - len(encsentence)) > 0:
-                        encsentence = torch.LongTensor(encsentence)
-                        encsentence = torch.nn.functional.pad(encsentence, pad=(0, Max_Length - len(encsentence)))
-                    else:
-                        encsentence = torch.LongTensor(encsentence)
+                        if (Max_Length - len(encsentence)) > 0:
+                            encsentence = torch.LongTensor(encsentence)
+                            encsentence = torch.nn.functional.pad(encsentence, pad=(0, Max_Length - len(encsentence)))
+                        else:
+                            encsentence = torch.LongTensor(encsentence)
 
-                    encoded_sentences.append(encsentence)
+                        encoded_sentences.append(encsentence)
             ids = torch.stack(encoded_sentences)
         return ids
