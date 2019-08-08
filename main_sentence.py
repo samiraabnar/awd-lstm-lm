@@ -110,7 +110,6 @@ eval_batch_size = 10
 args.batch_size = train_batch_size
 
 src = torchtext.data.Field()
-trg = torchtext.data.Field()
 
 # continuing from above
 train_data = torchtext.datasets.TranslationDataset(
@@ -124,7 +123,6 @@ test_data = torchtext.datasets.TranslationDataset(
      fields=(src, src))
 
 src.build_vocab(train_data, max_size=ntokens)
-trg.build_vocab(train_data, max_size=ntokens)
 
 train_iter = torchtext.data.BucketIterator(
      dataset=train_data, batch_size=args.batch_size,
@@ -198,7 +196,7 @@ def evaluate(data_iter, batch_size=10):
         output, hidden = model(data, hidden)
         total_loss += len(data) * criterion(model.decoder.weight, model.decoder.bias, output, targets).data
         hidden = repackage_hidden(hidden)
-    return total_loss.item() / len(data_iter)
+    return total_loss.item() / (len(data_iter)*batch_size)
 
 
 def train():
@@ -270,7 +268,7 @@ try:
                 tmp[prm] = prm.data.clone()
                 prm.data = optimizer.state[prm]['ax'].clone()
 
-            val_loss2 = evaluate(valid_iter)
+            val_loss2 = evaluate(valid_iter, eval_batch_size)
             print('-' * 89)
             print('| end of epoch {:3d} | time: {:5.2f}s | valid loss {:5.2f} | '
                 'valid ppl {:8.2f} | valid bpc {:8.3f}'.format(
