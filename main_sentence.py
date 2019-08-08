@@ -127,13 +127,13 @@ trg.build_vocab(train_data, max_size=ntokens)
 
 train_iter = torchtext.data.BucketIterator(
      dataset=train_data, batch_size=args.batch_size,
-     sort_key=lambda x: data.interleave_keys(len(x.src), len(x.trg)))
+     sort_key=lambda x: data.interleave_keys(len(x.src), len(x.trg)),device=torch.cuda)
 valid_iter = torchtext.data.BucketIterator(
      dataset=train_data, batch_size=val_batch_size,
-     sort_key=lambda x: data.interleave_keys(len(x.src), len(x.trg)))
+     sort_key=lambda x: data.interleave_keys(len(x.src), len(x.trg)),device=torch.cuda)
 test_iter = torchtext.data.BucketIterator(
      dataset=train_data, batch_size=test_batch_size,
-     sort_key=lambda x: data.interleave_keys(len(x.src), len(x.trg)))
+     sort_key=lambda x: data.interleave_keys(len(x.src), len(x.trg)),device=torch.cuda)
 
 
 
