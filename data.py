@@ -41,8 +41,8 @@ class Corpus(object):
             tokens = 0
             for line in f:
                 line = line.replace("\n", "")
-                print(line)
                 if line is not None:
+                    print(line)
                     words = line.split() + ['<eos>']
                     if len(words) > Max_Length:
                         Max_Length = len(words)
@@ -57,8 +57,8 @@ class Corpus(object):
                 token = 0
                 for line in f:
                     line = line.replace("\n", "")
-                    print(line)
                     if line is not None:
+                        print(line)
                         words = line.split() + ['<eos>']
                         for word in words:
                             ids[token] = self.dictionary.word2idx[word]
@@ -69,8 +69,8 @@ class Corpus(object):
                 for line in f:
                     encsentence = []
                     line = line.replace("\n", "")
-                    print(line)
                     if line is not None:
+                        print(line)
                         words = line.split() + ['<eos>']
                         for word in words:
                             encsentence.append(self.dictionary.word2idx[word])
