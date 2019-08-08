@@ -198,7 +198,7 @@ def evaluate(data_iter, batch_size=10):
         output, hidden = model(data, hidden)
         total_loss += len(data) * criterion(model.decoder.weight, model.decoder.bias, output, targets).data
         hidden = repackage_hidden(hidden)
-    return total_loss.item() / len(train_iter)
+    return total_loss.item() / len(data_iter)
 
 
 def train():
