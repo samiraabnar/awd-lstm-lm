@@ -104,9 +104,9 @@ else:
 ntokens = len(corpus.dictionary)
 print(ntokens)
 
-train_batch_size = 10
+train_batch_size = 20
 test_batch_size = 1
-eval_batch_size = 5
+eval_batch_size = 10
 args.batch_size = train_batch_size
 
 src = torchtext.data.Field()
@@ -115,13 +115,13 @@ trg = torchtext.data.Field()
 # continuing from above
 train_data = torchtext.datasets.TranslationDataset(
      path=args.data+'/train', exts=('.src', '.tgt'),
-     fields=(src, trg))
+     fields=(src, src))
 valid_data = torchtext.datasets.TranslationDataset(
      path=args.data+'/valid', exts=('.src', '.tgt'),
-     fields=(src, trg))
+     fields=(src, src))
 test_data = torchtext.datasets.TranslationDataset(
      path=args.data+'/test', exts=('.src', '.tgt'),
-     fields=(src, trg))
+     fields=(src, src))
 
 src.build_vocab(train_data, max_size=ntokens)
 trg.build_vocab(train_data, max_size=ntokens)
