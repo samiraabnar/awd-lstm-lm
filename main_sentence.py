@@ -210,14 +210,8 @@ def train():
     hidden = model.init_hidden(args.batch_size)
     batch, i = 0, 0
     while i < len(train_iter):
-        bptt = args.bptt if np.random.random() < 0.95 else args.bptt / 2.
-        # Prevent excessively small or negative sequence lengths
-        seq_len = max(5, int(np.random.normal(bptt, 5)))
-        # There's a very small chance that it could select a very long sequence length resulting in OOM
-        # seq_len = min(seq_len, args.bptt + 10)
-
         lr2 = optimizer.param_groups[0]['lr']
-        optimizer.param_groups[0]['lr'] = lr2 * seq_len / args.bptt
+        optimizer.param_groups[0]['lr'] = lr2
         model.train()
         (data, targets), b_size = next(iter(train_iter))
 
