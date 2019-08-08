@@ -214,8 +214,7 @@ def train():
         optimizer.param_groups[0]['lr'] = lr2
         model.train()
         (data, targets), b_size = next(iter(train_iter))
-        print(data.shape)
-        print(targets.shape)
+        print(len(data))
 
         # Starting each batch, we detach the hidden state from how it was previously produced.
         # If we didn't, the model would try backpropagating all the way to start of the dataset.
