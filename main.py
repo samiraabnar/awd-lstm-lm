@@ -101,10 +101,11 @@ else:
     torch.save(corpus, fn)
 
 
+batch_size = 10
 
-train_data = batchify(corpus.train, None, args)
-val_data = batchify(corpus.valid, None, args)
-test_data = batchify(corpus.test, None, args)
+train_data = batchify(corpus.train, batch_size, args)
+val_data = batchify(corpus.valid, batch_size, args)
+test_data = batchify(corpus.test, batch_size, args)
 
 print(corpus.valid.shape)
 eval_batch_size = corpus.valid.shape[1]
