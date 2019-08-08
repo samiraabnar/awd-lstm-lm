@@ -144,7 +144,7 @@ test_iter = torchtext.data.BucketIterator(
 from splitcross import SplitCrossEntropyLoss
 criterion = None
 
-ntokens = len(corpus.dictionary)
+ntokens = len(src.stoi)
 print(ntokens)
 model = model.RNNModel(args.model, ntokens, args.emsize, args.nhid, args.nlayers, args.dropout, args.dropouth, args.dropouti, args.dropoute, args.wdrop, args.tied)
 ###
