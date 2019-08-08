@@ -145,7 +145,7 @@ from splitcross import SplitCrossEntropyLoss
 criterion = None
 
 ntokens = len(src.vocab.stoi)
-print(ntokens)
+print("Number of tokens: ",ntokens)
 model = model.RNNModel(args.model, ntokens, args.emsize, args.nhid, args.nlayers, args.dropout, args.dropouth, args.dropouti, args.dropoute, args.wdrop, args.tied)
 ###
 if args.resume:
@@ -190,10 +190,11 @@ def evaluate(data_iter, batch_size=10):
     model.eval()
     if args.model == 'QRNN': model.reset()
     total_loss = 0
-    ntokens = len(corpus.dictionary)
     hidden = model.init_hidden(batch_size)
     for i in np.arange(len(train_iter)):
         (data, targets), b_size = next(iter(data_iter))
+        print(len(data))
+        print(data.shape)
         output, hidden = model(data, hidden)
         total_loss += len(data) * criterion(model.decoder.weight, model.decoder.bias, output, targets).data
         hidden = repackage_hidden(hidden)
