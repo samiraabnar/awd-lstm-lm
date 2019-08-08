@@ -245,6 +245,7 @@ def train():
             start_time = time.time()
         ###
         batch += 1
+        i += 1
 
 # Loop over epochs.
 lr = args.lr
