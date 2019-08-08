@@ -102,9 +102,9 @@ else:
 
 eval_batch_size = 10
 test_batch_size = 1
-train_data = corpus.train #batchify(corpus.train, args.batch_size, args)
-val_data = corpus.valid #batchify(corpus.valid, eval_batch_size, args)
-test_data = corpus.test #batchify(corpus.test, test_batch_size, args)
+train_data = batchify(corpus.train, None, args)
+val_data = batchify(corpus.valid, None, args)
+test_data = batchify(corpus.test, None, args)
 
 ###############################################################################
 # Build the model
