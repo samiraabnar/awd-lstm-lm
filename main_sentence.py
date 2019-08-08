@@ -191,13 +191,14 @@ def evaluate(data_iter, batch_size=10):
     if args.model == 'QRNN': model.reset()
     total_loss = 0
     hidden = model.init_hidden(batch_size)
-    for i in np.arange(len(train_iter)):
+    for i in np.arange(len(data_iter)):
         (data, targets), b_size = next(iter(data_iter))
         print(len(data))
         print(data.shape)
         output, hidden = model(data, hidden)
         total_loss += len(data) * criterion(model.decoder.weight, model.decoder.bias, output, targets).data
         hidden = repackage_hidden(hidden)
+
     return total_loss.item() / (len(data_iter)*batch_size)
 
 
