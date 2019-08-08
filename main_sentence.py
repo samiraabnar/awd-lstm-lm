@@ -104,9 +104,9 @@ else:
 ntokens = len(corpus.dictionary)
 print(ntokens)
 
-train_batch_size = 80
+train_batch_size = 10
 test_batch_size = 1
-eval_batch_size = 10
+eval_batch_size = 5
 
 src = torchtext.data.Field()
 trg = torchtext.data.Field()
