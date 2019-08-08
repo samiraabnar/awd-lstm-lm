@@ -193,7 +193,7 @@ def evaluate(data_iter, batch_size=10):
     ntokens = len(corpus.dictionary)
     hidden = model.init_hidden(batch_size)
     for i in np.arange(len(train_iter)):
-        b_size, data, targets = next(iter(data_iter))
+        (data, targets), b_size = next(iter(data_iter))
         output, hidden = model(data, hidden)
         total_loss += len(data) * criterion(model.decoder.weight, model.decoder.bias, output, targets).data
         hidden = repackage_hidden(hidden)
@@ -218,7 +218,7 @@ def train():
         lr2 = optimizer.param_groups[0]['lr']
         optimizer.param_groups[0]['lr'] = lr2 * seq_len / args.bptt
         model.train()
-        b_size, data, targets = next(iter(train_iter))
+        (data, targets), b_size = next(iter(train_iter))
 
         # Starting each batch, we detach the hidden state from how it was previously produced.
         # If we didn't, the model would try backpropagating all the way to start of the dataset.
