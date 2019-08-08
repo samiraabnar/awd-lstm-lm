@@ -40,6 +40,7 @@ class Corpus(object):
         with open(path, 'r') as f:
             tokens = 0
             for line in f:
+                line = line.replace("\n", "")
                 words = line.split() + ['<eos>']
                 if len(words) > Max_Length:
                     Max_Length = len(words)
@@ -53,6 +54,7 @@ class Corpus(object):
                 ids = torch.LongTensor(tokens)
                 token = 0
                 for line in f:
+                    line = line.replace("\n", "")
                     words = line.split() + ['<eos>']
                     for word in words:
                         ids[token] = self.dictionary.word2idx[word]
@@ -62,6 +64,7 @@ class Corpus(object):
             with open(path, 'r') as f:
                 for line in f:
                     encsentence = []
+                    line = line.replace("\n", "")
                     words = line.split() + ['<eos>']
                     for word in words:
                         encsentence.append(self.dictionary.word2idx[word])
