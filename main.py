@@ -107,10 +107,10 @@ train_data = batchify(corpus.train, batch_size, args)
 val_data = batchify(corpus.valid, batch_size, args)
 test_data = batchify(corpus.test, batch_size, args)
 
-print(corpus.valid.shape)
-eval_batch_size = corpus.valid.shape[1]
-test_batch_size = corpus.test.shape[1]
-args.batch_size = corpus.train.shape[1]
+print(val_data.shape)
+eval_batch_size = val_data.shape[1]
+test_batch_size = test_data.shape[1]
+args.batch_size = train_data.shape[1]
 ###############################################################################
 # Build the model
 ###############################################################################
