@@ -49,21 +49,17 @@ class Corpus(object):
 
         # Tokenize file content
         if not keep_sentence_boundaries:
-            encoded_sentences = []
             with open(path, 'r') as f:
                 ids = torch.LongTensor(tokens)
                 token = 0
                 for line in f:
-                    encoded_sentence = []
                     words = line.split() + ['<eos>']
-
                     for word in words:
                         ids[token] = self.dictionary.word2idx[word]
                         token += 1
         else:
             encoded_sentences = []
             with open(path, 'r') as f:
-                token = 0
                 for line in f:
                     encsentence = []
                     words = line.split() + ['<eos>']
