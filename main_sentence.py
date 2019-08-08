@@ -104,10 +104,9 @@ else:
 ntokens = len(corpus.dictionary)
 print(ntokens)
 
-train_batch_size = 20
 test_batch_size = 1
 eval_batch_size = 10
-args.batch_size = train_batch_size
+train_batch_size = args.batch_size
 
 src = torchtext.data.Field()
 
@@ -123,6 +122,8 @@ test_data = torchtext.datasets.TranslationDataset(
      fields=(src, src))
 
 src.build_vocab(train_data, max_size=ntokens)
+sn = 'vocab.{}.data'.format(hashlib.md5(args.data.encode()).hexdigest())
+torch.save(src, sn)
 
 train_iter = torchtext.data.BucketIterator(
      dataset=train_data, batch_size=args.batch_size,
