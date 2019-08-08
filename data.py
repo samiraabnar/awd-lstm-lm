@@ -31,26 +31,52 @@ class Corpus(object):
         self.valid = self.tokenize(os.path.join(path, 'valid.txt'))
         self.test = self.tokenize(os.path.join(path, 'test.txt'))
 
-    def tokenize(self, path):
+    def tokenize(self, path, keep_sentence_boundaries=True):
         """Tokenizes a text file."""
         assert os.path.exists(path)
         # Add words to the dictionary
+
+        Max_Length = 0
         with open(path, 'r') as f:
             tokens = 0
             for line in f:
                 words = line.split() + ['<eos>']
+                if len(words) > Max_Length:
+                    Max_Length = len(words)
                 tokens += len(words)
                 for word in words:
                     self.dictionary.add_word(word)
 
         # Tokenize file content
-        with open(path, 'r') as f:
-            ids = torch.LongTensor(tokens)
-            token = 0
-            for line in f:
-                words = line.split() + ['<eos>']
-                for word in words:
-                    ids[token] = self.dictionary.word2idx[word]
-                    token += 1
+        if not keep_sentence_boundaries:
+            encoded_sentences = []
+            with open(path, 'r') as f:
+                ids = torch.LongTensor(tokens)
+                token = 0
+                for line in f:
+                    encoded_sentence = []
+                    words = line.split() + ['<eos>']
+
+                    for word in words:
+                        ids[token] = self.dictionary.word2idx[word]
+                        token += 1
+        else:
+            encoded_sentences = []
+            with open(path, 'r') as f:
+                token = 0
+                for line in f:
+                    encsentence = []
+                    words = line.split() + ['<eos>']
+                    for word in words:
+                        encsentence.append(self.dictionary.word2idx[word])
+
+                    if (Max_Length - len(encsentence)) > 0:
+                        encsentence = torch.LongTensor(encsentence)
+                        encsentence = torch.nn.functional.pad(encsentence, pad=(0, Max_Length - len(encsentence)))
+                    else:
+                        encsentence = torch.LongTensor(encsentence)
+
+                    encoded_sentences.append(encsentence)
+            ids = torch.stack(encoded_sentences)
 
         return ids
