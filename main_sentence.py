@@ -210,7 +210,7 @@ def train():
     hidden = model.init_hidden(args.batch_size)
     batch, i = 0, 0
     print(len(train_data), len(train_iter))
-    while i < len(train_data):
+    while batch < len(train_iter):
         (data, targets), b_size = next(iter(train_iter))
 
         lr2 = optimizer.param_groups[0]['lr']
