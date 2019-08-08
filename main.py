@@ -101,11 +101,13 @@ else:
     torch.save(corpus, fn)
 
 
-batch_size = None
+train_batch_size = 80
+test_batch_size = 1
+val_batch_size = 10
 
-train_data = batchify(corpus.train, batch_size, args)
-val_data = batchify(corpus.valid, batch_size, args)
-test_data = batchify(corpus.test, batch_size, args)
+train_data = batchify(corpus.train, train_batch_size, args)
+val_data = batchify(corpus.valid, val_batch_size, args)
+test_data = batchify(corpus.test, test_batch_size, args)
 
 print(val_data.shape)
 eval_batch_size = val_data.shape[1]
@@ -119,6 +121,7 @@ from splitcross import SplitCrossEntropyLoss
 criterion = None
 
 ntokens = len(corpus.dictionary)
+print(ntokens)
 model = model.RNNModel(args.model, ntokens, args.emsize, args.nhid, args.nlayers, args.dropout, args.dropouth, args.dropouti, args.dropoute, args.wdrop, args.tied)
 ###
 if args.resume:
