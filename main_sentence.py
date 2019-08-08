@@ -206,6 +206,7 @@ def train():
     # Turn on training mode which enables dropout.
     if args.model == 'QRNN': model.reset()
     total_loss = 0
+    total_len = 0
     start_time = time.time()
     hidden = model.init_hidden(args.batch_size)
     batch, i = 0, 0
@@ -238,15 +239,17 @@ def train():
         optimizer.step()
 
         total_loss += raw_loss.data
+        total_len += len(data)
         optimizer.param_groups[0]['lr'] = lr2
         if batch % args.log_interval == 0 and batch > 0:
-            cur_loss = total_loss.item() / args.log_interval
+            cur_loss = total_loss.item() / total_len
             elapsed = time.time() - start_time
             print('| epoch {:3d} | {:5d}/{:5d} batches | lr {:05.5f} | ms/batch {:5.2f} | '
                     'loss {:5.2f} | ppl {:8.2f} | bpc {:8.3f}'.format(
                 epoch, batch, len(train_iter), optimizer.param_groups[0]['lr'],
                 elapsed * 1000 / args.log_interval, cur_loss, math.exp(cur_loss), cur_loss / math.log(2)))
             total_loss = 0
+            total_len = 0
             start_time = time.time()
         ###
         batch += 1
