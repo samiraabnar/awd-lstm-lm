@@ -4,6 +4,7 @@ import math
 import numpy as np
 import torch
 import torch.nn as nn
+import torchtext
 
 import data
 import model
@@ -107,14 +108,35 @@ train_batch_size = 80
 test_batch_size = 1
 val_batch_size = 10
 
-train_data = batchify(corpus.train, train_batch_size, args)
-val_data = batchify(corpus.valid, val_batch_size, args)
-test_data = batchify(corpus.test, test_batch_size, args)
+src = torchtext.data.Field()
+trg = torchtext.data.Field()
 
-print(val_data.shape)
-eval_batch_size = val_data.shape[1]
-test_batch_size = test_data.shape[1]
-args.batch_size = train_data.shape[1]
+# continuing from above
+train_data = torchtext.datasets.TranslationDataset(
+     path='/content/train', exts=('.src', '.tgt'),
+     fields=(src, trg))
+valid_data = torchtext.datasets.TranslationDataset(
+     path='/content/valid', exts=('.src', '.tgt'),
+     fields=(src, trg))
+test_data = torchtext.datasets.TranslationDataset(
+     path='/content/test', exts=('.src', '.tgt'),
+     fields=(src, trg))
+
+src.build_vocab(train_data, max_size=ntokens)
+trg.build_vocab(train_data, max_size=ntokens)
+
+train_iter = torchtext.data.BucketIterator(
+     dataset=train_data, batch_size=args.batch_size,
+     sort_key=lambda x: data.interleave_keys(len(x.src), len(x.trg)))
+valid_iter = torchtext.data.BucketIterator(
+     dataset=train_data, batch_size=val_batch_size,
+     sort_key=lambda x: data.interleave_keys(len(x.src), len(x.trg)))
+test_iter = torchtext.data.BucketIterator(
+     dataset=train_data, batch_size=test_batch_size,
+     sort_key=lambda x: data.interleave_keys(len(x.src), len(x.trg)))
+
+
+
 ###############################################################################
 # Build the model
 ###############################################################################
@@ -122,7 +144,8 @@ args.batch_size = train_data.shape[1]
 from splitcross import SplitCrossEntropyLoss
 criterion = None
 
-
+ntokens = len(corpus.dictionary)
+print(ntokens)
 model = model.RNNModel(args.model, ntokens, args.emsize, args.nhid, args.nlayers, args.dropout, args.dropouth, args.dropouti, args.dropoute, args.wdrop, args.tied)
 ###
 if args.resume:
@@ -162,19 +185,19 @@ print('Model total parameters:', total_params)
 # Training code
 ###############################################################################
 
-def evaluate(data_source, batch_size=10):
+def evaluate(data_iter, batch_size=10):
     # Turn on evaluation mode which disables dropout.
     model.eval()
     if args.model == 'QRNN': model.reset()
     total_loss = 0
     ntokens = len(corpus.dictionary)
     hidden = model.init_hidden(batch_size)
-    for i in range(0, data_source.size(0) - 1, args.bptt):
-        data, targets = get_batch(data_source, i, args, evaluation=True)
+    for i in np.arange(len(train_iter)):
+        b_size, data, targets = next(iter(data_iter))
         output, hidden = model(data, hidden)
         total_loss += len(data) * criterion(model.decoder.weight, model.decoder.bias, output, targets).data
         hidden = repackage_hidden(hidden)
-    return total_loss.item() / len(data_source)
+    return total_loss.item() / len(train_iter)
 
 
 def train():
@@ -185,7 +208,7 @@ def train():
     ntokens = len(corpus.dictionary)
     hidden = model.init_hidden(args.batch_size)
     batch, i = 0, 0
-    while i < train_data.size(0) - 1 - 1:
+    while i < len(train_iter):
         bptt = args.bptt if np.random.random() < 0.95 else args.bptt / 2.
         # Prevent excessively small or negative sequence lengths
         seq_len = max(5, int(np.random.normal(bptt, 5)))
@@ -195,7 +218,7 @@ def train():
         lr2 = optimizer.param_groups[0]['lr']
         optimizer.param_groups[0]['lr'] = lr2 * seq_len / args.bptt
         model.train()
-        data, targets = get_batch(train_data, i, args, seq_len=seq_len)
+        b_size, data, targets = next(iter(train_iter))
 
         # Starting each batch, we detach the hidden state from how it was previously produced.
         # If we didn't, the model would try backpropagating all the way to start of the dataset.
@@ -253,7 +276,7 @@ try:
                 tmp[prm] = prm.data.clone()
                 prm.data = optimizer.state[prm]['ax'].clone()
 
-            val_loss2 = evaluate(val_data)
+            val_loss2 = evaluate(valid_iter)
             print('-' * 89)
             print('| end of epoch {:3d} | time: {:5.2f}s | valid loss {:5.2f} | '
                 'valid ppl {:8.2f} | valid bpc {:8.3f}'.format(
@@ -269,7 +292,7 @@ try:
                 prm.data = tmp[prm].clone()
 
         else:
-            val_loss = evaluate(val_data, eval_batch_size)
+            val_loss = evaluate(valid_iter, eval_batch_size)
             print('-' * 89)
             print('| end of epoch {:3d} | time: {:5.2f}s | valid loss {:5.2f} | '
                 'valid ppl {:8.2f} | valid bpc {:8.3f}'.format(
