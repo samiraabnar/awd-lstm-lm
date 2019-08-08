@@ -107,6 +107,7 @@ print(ntokens)
 train_batch_size = 10
 test_batch_size = 1
 eval_batch_size = 5
+args.batch_size = train_batch_size
 
 src = torchtext.data.Field()
 trg = torchtext.data.Field()
