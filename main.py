@@ -101,7 +101,7 @@ else:
     torch.save(corpus, fn)
 
 
-batch_size = 10
+batch_size = None
 
 train_data = batchify(corpus.train, batch_size, args)
 val_data = batchify(corpus.valid, batch_size, args)
