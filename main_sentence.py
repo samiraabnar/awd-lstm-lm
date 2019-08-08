@@ -209,6 +209,7 @@ def train():
     start_time = time.time()
     hidden = model.init_hidden(args.batch_size)
     batch, i = 0, 0
+    print(len(train_data), len(train_iter))
     while i < len(train_iter):
         lr2 = optimizer.param_groups[0]['lr']
         optimizer.param_groups[0]['lr'] = lr2
