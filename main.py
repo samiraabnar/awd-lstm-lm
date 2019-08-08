@@ -100,14 +100,16 @@ else:
     corpus = data.Corpus(args.data)
     torch.save(corpus, fn)
 
-eval_batch_size = corpus.valid.shape[1]
-test_batch_size = corpus.test.shape[1]
-args.batch_size = corpus.train.shape[1]
+
 
 train_data = batchify(corpus.train, None, args)
 val_data = batchify(corpus.valid, None, args)
 test_data = batchify(corpus.test, None, args)
 
+print(corpus.valid.shape)
+eval_batch_size = corpus.valid.shape[1]
+test_batch_size = corpus.test.shape[1]
+args.batch_size = corpus.train.shape[1]
 ###############################################################################
 # Build the model
 ###############################################################################
