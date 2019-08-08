@@ -31,7 +31,7 @@ class Corpus(object):
         self.valid = self.tokenize(os.path.join(path, 'valid.txt'))
         self.test = self.tokenize(os.path.join(path, 'test.txt'))
 
-    def tokenize(self, path, keep_sentence_boundaries=True):
+    def tokenize(self, path, keep_sentence_boundaries=False):
         """Tokenizes a text file."""
         assert os.path.exists(path)
         # Add words to the dictionary
@@ -78,5 +78,4 @@ class Corpus(object):
 
                     encoded_sentences.append(encsentence)
             ids = torch.stack(encoded_sentences)
-
         return ids
