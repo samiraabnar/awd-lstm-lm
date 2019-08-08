@@ -129,10 +129,10 @@ train_iter = torchtext.data.BucketIterator(
      dataset=train_data, batch_size=args.batch_size,
      sort_key=lambda x: data.interleave_keys(len(x.src), len(x.trg)),device=torch.device('cuda'))
 valid_iter = torchtext.data.BucketIterator(
-     dataset=train_data, batch_size=eval_batch_size,
+     dataset=valid_data, batch_size=eval_batch_size,
      sort_key=lambda x: data.interleave_keys(len(x.src), len(x.trg)),device=torch.device('cuda'))
 test_iter = torchtext.data.BucketIterator(
-     dataset=train_data, batch_size=test_batch_size,
+     dataset=test_data, batch_size=test_batch_size,
      sort_key=lambda x: data.interleave_keys(len(x.src), len(x.trg)),device=torch.device('cuda'))
 
 
