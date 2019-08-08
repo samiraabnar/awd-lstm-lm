@@ -207,7 +207,6 @@ def train():
     if args.model == 'QRNN': model.reset()
     total_loss = 0
     start_time = time.time()
-    ntokens = len(corpus.dictionary)
     hidden = model.init_hidden(args.batch_size)
     batch, i = 0, 0
     while i < len(train_iter):
@@ -215,6 +214,8 @@ def train():
         optimizer.param_groups[0]['lr'] = lr2
         model.train()
         (data, targets), b_size = next(iter(train_iter))
+        print(data.shape)
+        print(targets.shape)
 
         # Starting each batch, we detach the hidden state from how it was previously produced.
         # If we didn't, the model would try backpropagating all the way to start of the dataset.
