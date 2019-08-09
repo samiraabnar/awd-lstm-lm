@@ -175,6 +175,7 @@ class SplitCrossEntropyLoss(nn.Module):
             t = t.squeeze()
             entropy = entropy * t.float()
             print(entropy)
+            print(targets)
             #print(entropy.sum())
             print(t)
             print(t.sum())
