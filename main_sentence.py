@@ -229,7 +229,7 @@ def train():
         optimizer.zero_grad()
 
         output, hidden, rnn_hs, dropped_rnn_hs = model(data, hidden, return_h=True)
-        raw_loss = criterion(model.decoder.weight, model.decoder.bias, output, targets, data_l)
+        raw_loss = criterion(model.decoder.weight, model.decoder.bias, output, targets, lengths=data_l)
 
         loss = raw_loss
         # Activiation Regularization
