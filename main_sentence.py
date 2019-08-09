@@ -230,6 +230,7 @@ def train():
 
         output, hidden, rnn_hs, dropped_rnn_hs = model(data, hidden, return_h=True)
         head_res = torch.nn.functional.linear(output, model.decoder.weight, bias=model.decoder.bias)
+        targets = targets.flatten()
         print(head_res.shape)
         print(targets.shape)
         raw_loss = criterion(output, targets.flatten())
