@@ -127,13 +127,13 @@ torch.save(src, sn)
 
 train_iter = torchtext.data.BucketIterator(
      dataset=train_data, batch_size=args.batch_size,
-     sort_key=lambda x: data.interleave_keys(len(x.src), len(x.trg)),device=torch.device('cuda'))
+     sort_key=lambda x: len(x.src),device=torch.device('cuda'))
 valid_iter = torchtext.data.BucketIterator(
      dataset=valid_data, batch_size=eval_batch_size,
-     sort_key=lambda x: data.interleave_keys(len(x.src), len(x.trg)),device=torch.device('cuda'))
+     sort_key=lambda  x: len(x.src),device=torch.device('cuda'))
 test_iter = torchtext.data.BucketIterator(
      dataset=test_data, batch_size=test_batch_size,
-     sort_key=lambda x: data.interleave_keys(len(x.src), len(x.trg)),device=torch.device('cuda'))
+     sort_key=lambda  x: len(x.src),device=torch.device('cuda'))
 
 
 
@@ -193,10 +193,10 @@ def evaluate(data_iter, batch_size=10):
     total_len = 0
     hidden = model.init_hidden(batch_size)
     for i in np.arange(len(data_iter)):
-        (data, targets), b_size = next(iter(data_iter))
+        ((data, data_l), (targets, targets_l)), _ = next(iter(data_iter))
         output, hidden = model(data, hidden)
         total_loss += len(data) * criterion(model.decoder.weight, model.decoder.bias, output, targets).data
-        total_len += len(data)
+        total_len += data_l.sum()
         hidden = repackage_hidden(hidden)
 
     return total_loss.item() / total_len
@@ -213,7 +213,7 @@ def train():
     print(len(train_data), len(train_iter))
     while batch < len(train_iter):
 
-        (data, targets), b_size = next(iter(train_iter))
+        ((data, data_l), (targets, targets_l)), _ = next(iter(train_iter))
 
         lr2 = optimizer.param_groups[0]['lr']
         optimizer.param_groups[0]['lr'] = lr2 * len(data) / args.bptt
