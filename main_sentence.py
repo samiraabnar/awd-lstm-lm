@@ -232,7 +232,7 @@ def train():
         head_res = torch.nn.functional.linear(output, model.decoder.weight, bias=model.decoder.bias)
         print(head_res.shape)
         print(targets.shape)
-        raw_loss = criterion(output,targets)
+        raw_loss = criterion(output, targets.flatten())
         #criterion(model.decoder.weight, model.decoder.bias, output, targets, lengths=targets_l)
 
         loss = raw_loss
