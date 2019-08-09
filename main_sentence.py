@@ -214,6 +214,8 @@ def train():
     while batch < len(train_iter):
 
         ((data, data_l), (targets, targets_l)), _ = next(iter(train_iter))
+        print("length")
+        print(data_l)
 
         lr2 = optimizer.param_groups[0]['lr']
         optimizer.param_groups[0]['lr'] = lr2 * len(data) / args.bptt
@@ -227,7 +229,7 @@ def train():
         optimizer.zero_grad()
 
         output, hidden, rnn_hs, dropped_rnn_hs = model(data, hidden, return_h=True)
-        raw_loss = criterion(model.decoder.weight, model.decoder.bias, output, targets)
+        raw_loss = criterion(model.decoder.weight, model.decoder.bias, output, targets, data_l)
 
         loss = raw_loss
         # Activiation Regularization
