@@ -105,7 +105,7 @@ class SplitCrossEntropyLoss(nn.Module):
 
     def forward(self, weight, bias, hiddens, targets, verbose=False, lengths=None):
 
-        length_mask = torch.arange(targets.shape[0])[None, :].cuda() <= targets.shape[0].cuda()
+        length_mask = torch.arange(targets.shape[0])[None, :].cuda() <= targets.shape[0]
         if lengths is not None:
             length_mask = torch.arange(targets.shape[0])[None, :].cuda() < lengths[:, None].cuda()
 
