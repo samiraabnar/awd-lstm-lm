@@ -108,7 +108,7 @@ test_batch_size = 1
 eval_batch_size = 10
 train_batch_size = args.batch_size
 
-src = torchtext.data.Field()
+src = torchtext.data.Field(include_lengths=True)
 
 # continuing from above
 train_data = torchtext.datasets.TranslationDataset(
