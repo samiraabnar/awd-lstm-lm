@@ -182,7 +182,6 @@ total_params = sum(x.size()[0] * x.size()[1] if len(x.size()) > 1 else x.size()[
 print('Args:', args)
 print('Model total parameters:', total_params)
 
-criterion = nn.CrossEntropyLoss()
 ###############################################################################
 # Training code
 ###############################################################################
