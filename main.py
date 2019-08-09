@@ -103,7 +103,7 @@ else:
 ntokens = len(corpus.dictionary)
 print(ntokens)
 
-train_batch_size = 80
+train_batch_size = args.batch_size
 test_batch_size = 1
 val_batch_size = 10
 
