@@ -182,6 +182,7 @@ total_params = sum(x.size()[0] * x.size()[1] if len(x.size()) > 1 else x.size()[
 print('Args:', args)
 print('Model total parameters:', total_params)
 
+criterion = nn.CrossEntropyLoss()
 ###############################################################################
 # Training code
 ###############################################################################
@@ -227,8 +228,9 @@ def train():
         hidden = repackage_hidden(hidden)
         optimizer.zero_grad()
         output, hidden, rnn_hs, dropped_rnn_hs = model(data, hidden, return_h=True)
-        raw_loss = criterion(model.decoder.weight, model.decoder.bias, output, targets, lengths=targets_l)
-
+        #raw_loss = criterion(model.decoder.weight, model.decoder.bias, output, targets, lengths=targets_l)
+        all_head_res = torch.nn.functional.linear(combo, model.decoder.weight, bias=model.decoder.bias)
+        raw_loss = criterion(output.view(-1, ntokens), targets)
         loss = raw_loss
         # Activiation Regularization
         if args.alpha: loss = loss + sum(args.alpha * dropped_rnn_h.pow(2).mean() for dropped_rnn_h in dropped_rnn_hs[-1:])

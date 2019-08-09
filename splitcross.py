@@ -105,7 +105,7 @@ class SplitCrossEntropyLoss(nn.Module):
 
     def forward(self, weight, bias, hiddens, targets, verbose=False, lengths=None):
 
-        length_mask = torch.ones(targets.shape).cuda()
+        length_mask = None
         if lengths is not None:
             length_mask = torch.arange(targets.shape[0])[None, :].cuda() < lengths[:, None].cuda()
             length_mask = length_mask.long()
@@ -171,9 +171,11 @@ class SplitCrossEntropyLoss(nn.Module):
                 tail_entropy = torch.gather(torch.nn.functional.log_softmax(tail_res, dim=-1), dim=1, index=indices).squeeze()
                 entropy = -(head_entropy + tail_entropy)
 
-            t = length_mask.flatten()#length_mask.reshape(1, length_mask.size()[0] * length_mask.size()[1])
-            t = t.squeeze()
-            entropy = entropy * t.float()
+
+            if length_mask:
+                t = length_mask.flatten()#length_mask.reshape(1, length_mask.size()[0] * length_mask.size()[1])
+                t = t.squeeze()
+                entropy = entropy * t.float()
             #print(entropy)
             #print(targets)
             #print(entropy.sum())
