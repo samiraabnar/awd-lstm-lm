@@ -177,7 +177,6 @@ if args.cuda:
     criterion = criterion.cuda()
 ###
 
-criterion = nn.CrossEntropyLoss(ignore_index=src.vocab.stoi["<pad>"])
 params = list(model.parameters()) + list(criterion.parameters())
 total_params = sum(x.size()[0] * x.size()[1] if len(x.size()) > 1 else x.size()[0] for x in params if x.size())
 print('Args:', args)
@@ -227,14 +226,8 @@ def train():
         # If we didn't, the model would try backpropagating all the way to start of the dataset.
         hidden = repackage_hidden(hidden)
         optimizer.zero_grad()
-
         output, hidden, rnn_hs, dropped_rnn_hs = model(data, hidden, return_h=True)
-        head_res = torch.nn.functional.linear(output, model.decoder.weight, bias=model.decoder.bias)
-        targets = targets.flatten()
-        print(head_res.shape)
-        print(targets.shape)
-        raw_loss = criterion(output, targets.flatten()).cuda()
-        #criterion(model.decoder.weight, model.decoder.bias, output, targets, lengths=targets_l)
+        raw_loss = criterion(model.decoder.weight, model.decoder.bias, output, targets, lengths=targets_l)
 
         loss = raw_loss
         # Activiation Regularization
