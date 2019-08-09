@@ -111,6 +111,7 @@ class SplitCrossEntropyLoss(nn.Module):
 
         print("shapes")
         print(targets.shape)
+        print(lengths.shape)
         print(length_mask.shape)
         targets = targets * length_mask
         if self.verbose or verbose:
