@@ -143,7 +143,6 @@ test_iter = torchtext.data.BucketIterator(
 
 from splitcross import SplitCrossEntropyLoss
 criterion = None
-#criterion = nn.CrossEntropyLoss(ignore_index=src.vocab.stoi["<pad>"])
 
 ntokens = len(src.vocab.stoi)
 print("Number of tokens: ",ntokens)
@@ -177,6 +176,8 @@ if args.cuda:
     model = model.cuda()
     criterion = criterion.cuda()
 ###
+
+criterion = nn.CrossEntropyLoss(ignore_index=src.vocab.stoi["<pad>"])
 params = list(model.parameters()) + list(criterion.parameters())
 total_params = sum(x.size()[0] * x.size()[1] if len(x.size()) > 1 else x.size()[0] for x in params if x.size())
 print('Args:', args)
@@ -228,7 +229,8 @@ def train():
         optimizer.zero_grad()
 
         output, hidden, rnn_hs, dropped_rnn_hs = model(data, hidden, return_h=True)
-        raw_loss = criterion(model.decoder.weight, model.decoder.bias, output, targets, lengths=data_l)
+        raw_loss = criterion(output,targets)
+        #criterion(model.decoder.weight, model.decoder.bias, output, targets, lengths=targets_l)
 
         loss = raw_loss
         # Activiation Regularization
