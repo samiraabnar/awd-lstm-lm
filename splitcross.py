@@ -180,7 +180,7 @@ class SplitCrossEntropyLoss(nn.Module):
 
             t = length_mask.reshape(1, length_mask.size()[0] * length_mask.size()[1])
             t = t.squeeze()
-            entropy = entropy * t
+            entropy = entropy * t.long()
             ###
             running_offset += len(split_hiddens[idx])
             total_loss = entropy.float().sum() if total_loss is None else total_loss + entropy.float().sum()
