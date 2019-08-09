@@ -177,7 +177,7 @@ class SplitCrossEntropyLoss(nn.Module):
         if length_mask is not None:
             t = length_mask.t().flatten()#length_mask.reshape(1, length_mask.size()[0] * length_mask.size()[1])
             #t = t.squeeze()
-            entropy.squeeze()
+            entropy = entropy.squeeze()
             print(t.shape)
             print(entropy.shape)
             entropy = entropy * t.float()
