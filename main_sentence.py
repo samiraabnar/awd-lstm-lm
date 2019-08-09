@@ -212,10 +212,13 @@ def train():
     batch, i = 0, 0
     print(len(train_data), len(train_iter))
     while batch < len(train_iter):
-        model.train()
+
         (data, targets), b_size = next(iter(train_iter))
+
         lr2 = optimizer.param_groups[0]['lr']
         optimizer.param_groups[0]['lr'] = lr2 * len(data) / args.bptt
+        model.train()
+
 
 
         # Starting each batch, we detach the hidden state from how it was previously produced.
