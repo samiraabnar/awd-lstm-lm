@@ -176,7 +176,9 @@ class SplitCrossEntropyLoss(nn.Module):
             entropy = entropy * t.float()
             print(entropy)
             #print(entropy.sum())
-            #print(t.sum())
+            print(t)
+            print(t.sum())
+            print(len(entropy))
             #print(total_loss)
             ###
             running_offset += len(split_hiddens[idx])
