@@ -178,9 +178,9 @@ class SplitCrossEntropyLoss(nn.Module):
                 tail_entropy = torch.gather(torch.nn.functional.log_softmax(tail_res, dim=-1), dim=1, index=indices).squeeze()
                 entropy = -(head_entropy + tail_entropy)
 
-            print("shape of entropy")
-            print(entropy.shape)
-            print(targets.shape[0]*targets.shape[1])
+            t = length_mask.reshape(1, length_mask.size()[0] * length_mask.size()[1])
+            t = t.squeeze()
+            entropy = entropy * t
             ###
             running_offset += len(split_hiddens[idx])
             total_loss = entropy.float().sum() if total_loss is None else total_loss + entropy.float().sum()
