@@ -233,7 +233,7 @@ def train():
         targets = targets.flatten()
         print(head_res.shape)
         print(targets.shape)
-        raw_loss = criterion(output, targets.flatten())
+        raw_loss = criterion(output, targets.flatten()).cuda()
         #criterion(model.decoder.weight, model.decoder.bias, output, targets, lengths=targets_l)
 
         loss = raw_loss
