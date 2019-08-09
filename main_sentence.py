@@ -143,6 +143,7 @@ test_iter = torchtext.data.BucketIterator(
 
 from splitcross import SplitCrossEntropyLoss
 criterion = None
+#criterion = nn.CrossEntropyLoss(ignore_index=src.vocab.stoi["<pad>"])
 
 ntokens = len(src.vocab.stoi)
 print("Number of tokens: ",ntokens)
