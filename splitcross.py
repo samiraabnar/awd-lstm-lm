@@ -174,6 +174,7 @@ class SplitCrossEntropyLoss(nn.Module):
             t = length_mask.reshape(1, length_mask.size()[0] * length_mask.size()[1])
             t = t.squeeze()
             entropy = entropy * t.float()
+            print(entropy)
             #print(entropy.sum())
             #print(t.sum())
             #print(total_loss)
