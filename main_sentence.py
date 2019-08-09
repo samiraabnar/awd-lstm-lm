@@ -214,8 +214,6 @@ def train():
     while batch < len(train_iter):
 
         ((data, data_l), (targets, targets_l)), _ = next(iter(train_iter))
-        print("length")
-        print(data_l)
 
         lr2 = optimizer.param_groups[0]['lr']
         optimizer.param_groups[0]['lr'] = lr2 * len(data) / args.bptt
