@@ -175,11 +175,11 @@ class SplitCrossEntropyLoss(nn.Module):
             total_loss = entropy.float().sum() if total_loss is None else total_loss + entropy.float().sum()
 
         if length_mask is not None:
-            #t = length_mask.t().flatten()#length_mask.reshape(1, length_mask.size()[0] * length_mask.size()[1])
+            t = length_mask.t() #.flatten()#length_mask.reshape(1, length_mask.size()[0] * length_mask.size()[1])
             #t = t.squeeze()
             print(targets.shape)
+            print(t.shape)
             print(entropy.shape)
-            print(length_mask.shape)
             #print(t.shape)
             #entropy = entropy.squeeze()
             #entropy = entropy * t.float()
