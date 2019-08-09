@@ -109,6 +109,9 @@ class SplitCrossEntropyLoss(nn.Module):
         if lengths is not None:
             length_mask = torch.arange(targets.shape[0])[None, :].cuda() < lengths[:, None].cuda()
 
+        print("shapes")
+        print(targets.shape)
+        print(length_mask.shape)
         targets = targets * length_mask
         if self.verbose or verbose:
             for idx in sorted(self.stats):
