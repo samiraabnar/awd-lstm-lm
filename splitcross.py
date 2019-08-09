@@ -108,7 +108,7 @@ class SplitCrossEntropyLoss(nn.Module):
         length_mask = torch.arange(targets.shape[0])[None, :].cuda() <= targets.shape[0]
         if lengths is not None:
             length_mask = torch.arange(targets.shape[0])[None, :].cuda() < lengths[:, None].cuda()
-            length_mask = length_mask.t().cpu()
+            length_mask = length_mask.t().long()
 
         print("shapes")
         print(targets.shape)
