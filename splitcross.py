@@ -110,7 +110,7 @@ class SplitCrossEntropyLoss(nn.Module):
             length_mask = torch.arange(targets.shape[0])[None, :].cuda() < lengths[:, None].cuda()
             length_mask = length_mask.t().long()
 
-        targets = targets * length_mask
+        #targets = targets * length_mask
         if self.verbose or verbose:
             for idx in sorted(self.stats):
                 print('{}: {}'.format(idx, int(np.mean(self.stats[idx]))), end=', ')
@@ -178,7 +178,7 @@ class SplitCrossEntropyLoss(nn.Module):
             running_offset += len(split_hiddens[idx])
             total_loss = entropy.float().sum() if total_loss is None else total_loss + entropy.float().sum()
 
-        return (total_loss / len(targets)).type_as(weight)
+        return (total_loss / len(t.sum())).type_as(weight)
 
 
 if __name__ == '__main__':
